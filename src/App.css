@@ -1,0 +1,54 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.cell {
+  position: relative;
+	width: 40px;
+	height: 40px;
+	border: 1px solid black;
+}
+
+.inventory {
+  position: relative;
+	margin-left: 100px;
+}
+
+.container {
+  position: relative;
+	min-height: 700px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.row {
+	display: flex;
+}
+
+.item {
+	position: relative;
+	width: 40px;
+	height: 40px;
+	background: darkred;
+	z-index: 1000;
+}
+
+.item-child {
+	position: absolute;
+  top: 0;
+  left: 0;
+	background: yellow;
+  opacity: 0.8;
+  z-index: 1000;
+  /*background-image: url("https://gamepedia.cursecdn.com/escapefromtarkov_gamepedia/thumb/7/72/Tactical_Sling_bag.png/320px-Tactical_Sling_bag.png?version=eb617d17d23014022a52ae9ff21a4a54");*/
+  /*background-position: center center;*/
+  /*background-size: cover;*/
+  /*background-repeat: no-repeat;*/
+}
+
+.dragging {
+  position: static;
+}
