@@ -1,12 +1,22 @@
+import React from 'react';
+
 import './App.css';
 import Inventory from './components/Inventory';
-import Item from './components/Item';
+import { formatCoordinates } from './utils';
+
+const items = {
+  [formatCoordinates(1, 1)]: {
+    width: 1,
+    height: 1
+  }
+}
 
 const App = () => {
+
 	return (
 		<div className="container">
-			<Item width={2} height={2} />
-			<Inventory height={8} width={8} />
+      <Inventory type="bag" items={items} height={4} width={4} />
+      <Inventory type="stash" items={items} height={8} width={8} />
 		</div>
 	);
 }

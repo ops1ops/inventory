@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import { CELL_SIZE, DATA_TRANSFER } from '../constants';
 import { formatCoordinates, parseCoordinates } from '../utils';
 import Cell from './Cell';
+import Item from './Item';
 
 const DROP_CELL_CLASS = 'cell';
 const UNDRAGGABLE_CLASSES = [DROP_CELL_CLASS];
 
-const Inventory = ({ height, width }) => {
+const Inventory = ({ height, width, items, type }) => {
 	useEffect(() => {
 		let dragged;
 
@@ -55,7 +56,7 @@ const Inventory = ({ height, width }) => {
         return;
       }
 
-      const target = document.getElementById(`${dropCellX + 1}-${dropCellY + 1}`);
+      const target = document.querySelector(`#${formatCoordinates(dropCellX + 1, dropCellY + 1)}`);
 
 			if (target && target.className === DROP_CELL_CLASS) {
         target.appendChild(dragged);
@@ -63,13 +64,14 @@ const Inventory = ({ height, width }) => {
 		}, false);
 	}, []);
 
-
   return (
-    <div className="inventory">
+    <div className={"inventory " + type}>
 			{Array(height).fill().map((_, y) => (
 				<div key={y} draggable="false" className="row">
 					{Array(width).fill().map((_, x) => (
-						<Cell key={x+y} x={x} y={y} />
+						<Cell key={x+y} x={x} y={y}>
+              {items[formatCoordinates(x, y)] && <Item {...items[formatCoordinates(x, y)]} />}
+            </Cell>
 					))}
 				</div>
 			))}
