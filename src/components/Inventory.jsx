@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { CELL_SIZE, DATA_TRANSFER, ITEM_PARAMS } from '../constants';
-import { formatCoordinates, parseCoordinates } from '../utils';
+import { formatCoordinates, getItemByCoordinates, isPointInBounds, parseCoordinates } from '../utils';
 import Cell from './Cell';
 import Item from './Item';
 import { StoreContext } from '../store/context';
@@ -8,15 +8,11 @@ import { StoreContext } from '../store/context';
 const DROP_CELL_CLASS = 'cell';
 const UNDRAGGABLE_CLASSES = [DROP_CELL_CLASS];
 
-const Inventory = ({ height, width, items, type, id, parentIds = [], parentType = [] }) => {
-  const { moveItemInInventory, moveItemToOtherInventory } = useContext(StoreContext);
-
-  if (!type) {
-    console.error('MISSING TYPE IN INVENTORY');
-  }
+const Inventory = ({ height, width, items, id }) => {
+  const { moveItem } = useContext(StoreContext);
 
 	useEffect(() => {
-	  const trackableZone = document.querySelector(`.${type}`);
+	  const trackableZone = document.getElementById(id);
 
     trackableZone.addEventListener("dragover", (event) => {
 			event.preventDefault();
@@ -69,28 +65,22 @@ const Inventory = ({ height, width, items, type, id, parentIds = [], parentType 
 
       const dropCoordinates = formatCoordinates(dropCellX + 1, dropCellY + 1);
 
-      const itemInventoryType = event.dataTransfer.getData(DATA_TRANSFER.inventoryType);
-      const id = event.dataTransfer.getData(DATA_TRANSFER.id);
+      const itemInventoryId = event.dataTransfer.getData(DATA_TRANSFER.inventoryType);
+      const itemId = event.dataTransfer.getData(DATA_TRANSFER.id);
+      const inventoryId = itemInventoryId === id ? null : id;
 
-      if (itemInventoryType === type) {
-        moveItemInInventory(itemInventoryType, dropCoordinates, id, parentType);
-      } else {
-        const movingItem = { inventoryType: itemInventoryType, id };
-        const inventoryToMove = { coordinates: dropCoordinates, inventoryType: type };
-
-        moveItemToOtherInventory(movingItem, inventoryToMove);
-      }
+      moveItem(itemId, dropCoordinates, inventoryId);
 		}, false);
-	}, []);
+	}, [height, id, moveItem, width]);
 
   const renderItem = (x, y) => {
-    const itemProps = items[formatCoordinates(x, y)];
+    const itemProps = getItemByCoordinates(items, formatCoordinates(x, y));
 
-    return itemProps && <Item parentType={parentType.concat(type)} {...itemProps} />
+    return itemProps && <Item parentType={id} {...itemProps} />
   }
 
   return (
-    <div className={"inventory " + type}>
+    <div id={id} className="inventory">
 			{Array(height).fill().map((_, y) => (
 				<div key={y} draggable="false" className="row">
 					{Array(width).fill().map((_, x) => (

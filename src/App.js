@@ -1,120 +1,103 @@
-import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useCallback, useState } from 'react';
 
 import './App.css';
 import Inventory from './components/Inventory';
-import { findObjectInObject, formatCoordinates, getItemDetailsById, removeItem } from './utils';
-import { ITEM_DIRECTIONS, ITEM_TYPES } from './constants';
+import {
+  formatCoordinates,
+  getIdIncrement,
+  getInventory,
+  getInventoryItems,
+  validateCoordinates,
+  withIds,
+} from './utils';
+import { ITEM_TYPES } from './constants';
 import { StoreContext } from './store/context';
 
-const bagItems = {
-  [formatCoordinates(1, 1)]: {
-    id: uuidv4(),
-    typeId: ITEM_TYPES.smallBag,
-    direction: ITEM_DIRECTIONS.vertical,
-    inventory: {
-      width: 3,
-      height: 3,
-      type: 'qwe-0',  // uniq id
-      items: {
-        [formatCoordinates(2, 2)]: {
-          id: uuidv4(),
-          typeId: ITEM_TYPES.smallBag,
-          direction: ITEM_DIRECTIONS.vertical,
-          inventory: {
-            width: 2,
-            height: 2,
-            type: 'qwe-1',
-            items: {
-              [formatCoordinates(1, 1)]: {
-                id: uuidv4(),
-                typeId: ITEM_TYPES.roubles,
-              }
-            }
-          }
-        },
-      },
-    },
-  },
-}
+const incrementId = getIdIncrement();
 
-const stashItems = {
-  [formatCoordinates(2, 2)]: {
-    id: uuidv4(),
-    typeId: ITEM_TYPES.roubles,
-    direction: ITEM_DIRECTIONS.vertical,
+const allInventories = withIds([
+  {
+    width: 4,
+    height: 4,
   },
-  [formatCoordinates(4, 5)]: {
-    id: uuidv4(),
-    typeId: ITEM_TYPES.roubles,
-    direction: ITEM_DIRECTIONS.vertical,
+  {
+    width: 16,
+    height: 26,
   },
-  [formatCoordinates(7, 3)]: {
-    id: uuidv4(),
-    typeId: ITEM_TYPES.roubles,
-    direction: ITEM_DIRECTIONS.vertical,
+  {
+    width: 2,
+    height: 2,
+  }
+], incrementId);
+
+const allItems = withIds([
+  {
+    typeId: ITEM_TYPES.smallBag,
+    coordinates: formatCoordinates(1, 1),
+    inventoryId: '1', // item's inventory // required
+    childInventoryId: '3', // if item is not inventory => null // not required
   },
-  [formatCoordinates(15, 23)]: {
-    id: uuidv4(),
+  {
     typeId: ITEM_TYPES.roubles,
-    direction: ITEM_DIRECTIONS.vertical,
+    coordinates: formatCoordinates(2, 2),
+    inventoryId: '3',
+    childInventoryId: null,
   },
-  [formatCoordinates(10, 10)]: {
-    id: uuidv4(),
+  {
     typeId: ITEM_TYPES.roubles,
-    direction: ITEM_DIRECTIONS.vertical,
+    coordinates: formatCoordinates(5, 23),
+    inventoryId: '2',
+    childInventoryId: null,
   },
-  [formatCoordinates(11, 11)]: {
-    id: uuidv4(),
+  {
     typeId: ITEM_TYPES.roubles,
-    direction: ITEM_DIRECTIONS.vertical,
+    coordinates: formatCoordinates(3, 4),
+    inventoryId: '2',
+    childInventoryId: null,
   },
-  [formatCoordinates(12, 15)]: {
-    id: uuidv4(),
+  {
     typeId: ITEM_TYPES.roubles,
-    direction: ITEM_DIRECTIONS.vertical,
+    coordinates: formatCoordinates(4, 4),
+    inventoryId: '2',
+    childInventoryId: null,
   },
-}
+  {
+    typeId: ITEM_TYPES.roubles,
+    coordinates: formatCoordinates(7, 3),
+    inventoryId: '2',
+    childInventoryId: null,
+  },
+]);
+
+const validatedItems = validateCoordinates(allItems, allInventories);
 
 const App = () => {
-  const [{ bag, stash }, setItems] = useState({ bag: bagItems, stash: stashItems });
+  const initialInventories = allInventories.slice(0, 2).map(({ id }) => id);
+  const [items, setItems] = useState(validatedItems);
 
-  const moveItemToOtherInventory = ({inventoryType: inventoryFrom, id}, {coordinates, inventoryType: inventoryTo}) => {
+  const moveItem = useCallback((itemId, newCoordinates, newInventoryId) => {
     setItems((prevItems) => {
-      const {[inventoryFrom]: inventory} = prevItems;
-      const [prevCoordinates, data] = getItemDetailsById(inventory, id);
+      const itemIndex = prevItems.findIndex((item) => item.id === itemId);
+      const newItems = prevItems.slice();
 
-      return {
-        ...prevItems,
-        [inventoryFrom]: removeItem(inventory, prevCoordinates),
-        [inventoryTo]: {
-          ...prevItems[inventoryTo],
-          [coordinates]: data,
-        },
+      newItems[itemIndex].coordinates = newCoordinates;
+
+      if (newInventoryId) {
+        newItems[itemIndex].inventoryId = newInventoryId;
       }
-    })
-  };
 
-  const moveItemInInventory = (inventoryType, coordinates, itemId, parentTypes) => {
-    setItems((prevItems) => {
-      const { [inventoryType]: inventory } = prevItems;
-      const [prevCoordinates, data] = getItemDetailsById(inventory, itemId);
-
-      return {
-        ...prevItems,
-        [inventoryType]: {
-          ...removeItem(inventory, prevCoordinates),
-          [coordinates]: data,
-        },
-      }
-    })
-  }
+      return newItems;
+    });
+  }, []);
 
   return (
-    <StoreContext.Provider value={{moveItemInInventory, moveItemToOtherInventory}}>
+    <StoreContext.Provider value={{ moveItem, allInventories, items }}>
       <div className="container">
-        <Inventory type="bag" items={bag} height={4} width={4}/>
-        <Inventory id='id' type="stash" items={stash} height={26} width={16}/>
+        {
+          initialInventories.map((id) => (
+            <Inventory key={id} items={getInventoryItems(items, id)} {...getInventory(allInventories, id)} />
+          ))
+        }
       </div>
     </StoreContext.Provider>
   );

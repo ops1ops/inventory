@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import Inventory from './Inventory';
-import { getStyleBySize } from '../utils';
+import { getInventory, getInventoryItems, getStyleBySize } from '../utils';
+import { StoreContext } from '../store/context';
 
 Modal.setAppElement('#root');
 
-const ModalInventory = ({ parentSize, parentType, ...rest }) => {
+const ModalInventory = ({ parentSize, id }) => {
+  const { items, allInventories } = useContext(StoreContext)
   const [isOpened, setOpened] = useState(false);
 
   const closeModal = (event) => {
@@ -21,14 +22,12 @@ const ModalInventory = ({ parentSize, parentType, ...rest }) => {
 
   return (
     <div onDoubleClick={openModal} className="modal-inventory-container" style={getStyleBySize(parentSize)}>
-      {
-        isOpened && (
-          <div className="modal-inventory">
-            <button onClick={closeModal}>close</button>
-            <Inventory parentType={parentType} {...rest} />
-          </div>
-        )
-      }
+      <Modal isOpen={isOpened} className="modal-inventory" style={{ zIndex: 1 }}>
+        <div className="modal-inventory">
+          <button onClick={closeModal}>close</button>
+          <Inventory id={id} items={getInventoryItems(items, id)} {...getInventory(allInventories, id)} />
+        </div>
+      </Modal>
     </div>
   );
 };

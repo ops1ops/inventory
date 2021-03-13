@@ -3,7 +3,7 @@ import { CELL_SIZE, ITEM_PARAMS } from '../constants';
 import { formatCoordinates } from '../utils';
 import ModalInventory from './ModalInventory';
 
-const Item = ({ id, typeId, inventory, parentType }) => {
+const Item = ({ id, typeId, childInventoryId }) => {
   const { width, height, image } = ITEM_PARAMS[typeId];
 
 	return (
@@ -18,7 +18,7 @@ const Item = ({ id, typeId, inventory, parentType }) => {
       <div className="item-content">
         <span>{typeId}</span>
       </div>
-      {inventory && <ModalInventory parentType={parentType} parentSize={{ width, height }} {...inventory} />}
+      {childInventoryId && <ModalInventory id={childInventoryId} parentSize={{ width, height }} />}
     </div>
 	);
 };
