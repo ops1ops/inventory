@@ -6,7 +6,7 @@ import { StoreContext } from '../store/context';
 
 Modal.setAppElement('#root');
 
-const ModalInventory = ({ parentSize, id }) => {
+const ModalInventory = ({ parentSize, id, name }) => {
   const { items, allInventories } = useContext(StoreContext)
   const [isOpened, setOpened] = useState(false);
 
@@ -23,10 +23,11 @@ const ModalInventory = ({ parentSize, id }) => {
   return (
     <div onDoubleClick={openModal} className="modal-inventory-container" style={getStyleBySize(parentSize)}>
       <Modal isOpen={isOpened} className="modal-inventory" style={{ zIndex: 1 }}>
-        <div className="modal-inventory">
-          <button onClick={closeModal}>close</button>
-          <Inventory id={id} items={getInventoryItems(items, id)} {...getInventory(allInventories, id)} />
+        <div className="modal-inventory-header">
+          <span className="header-text">{name} ({id})</span>
+          <button onClick={closeModal} className="close-button">X</button>
         </div>
+        <Inventory id={id} items={getInventoryItems(items, id)} {...getInventory(allInventories, id)} />
       </Modal>
     </div>
   );

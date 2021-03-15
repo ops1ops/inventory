@@ -1,84 +1,23 @@
 import React, { useCallback, useState } from 'react';
 
-import './App.css';
 import Inventory from './components/Inventory';
-import {
-  formatCoordinates,
-  getIdIncrement,
-  getInventory,
-  getInventoryItems,
-  validateCoordinates,
-  withIds,
-} from './utils';
-import { ITEM_TYPES } from './constants';
+import { deepClone, getInventoryItems } from './utils';
 import { StoreContext } from './store/context';
+import { allItems } from './mockData/items';
+import { allInventories } from './mockData/inventories';
+import './App.css';
+import validateItems from './validators/validateItems';
 
-const incrementId = getIdIncrement();
-
-const allInventories = withIds([
-  {
-    width: 4,
-    height: 4,
-  },
-  {
-    width: 16,
-    height: 26,
-  },
-  {
-    width: 2,
-    height: 2,
-  }
-], incrementId);
-
-const allItems = withIds([
-  {
-    typeId: ITEM_TYPES.smallBag,
-    coordinates: formatCoordinates(1, 1),
-    inventoryId: '1', // item's inventory // required
-    childInventoryId: '3', // if item is not inventory => null // not required
-  },
-  {
-    typeId: ITEM_TYPES.roubles,
-    coordinates: formatCoordinates(2, 2),
-    inventoryId: '3',
-    childInventoryId: null,
-  },
-  {
-    typeId: ITEM_TYPES.roubles,
-    coordinates: formatCoordinates(5, 23),
-    inventoryId: '2',
-    childInventoryId: null,
-  },
-  {
-    typeId: ITEM_TYPES.roubles,
-    coordinates: formatCoordinates(3, 4),
-    inventoryId: '2',
-    childInventoryId: null,
-  },
-  {
-    typeId: ITEM_TYPES.roubles,
-    coordinates: formatCoordinates(4, 4),
-    inventoryId: '2',
-    childInventoryId: null,
-  },
-  {
-    typeId: ITEM_TYPES.roubles,
-    coordinates: formatCoordinates(7, 3),
-    inventoryId: '2',
-    childInventoryId: null,
-  },
-]);
-
-const validatedItems = validateCoordinates(allItems, allInventories);
+const validatedItems = validateItems(allItems, allInventories);
+const rootInventories = allInventories.slice(0, 2);
 
 const App = () => {
-  const initialInventories = allInventories.slice(0, 2).map(({ id }) => id);
   const [items, setItems] = useState(validatedItems);
 
   const moveItem = useCallback((itemId, newCoordinates, newInventoryId) => {
     setItems((prevItems) => {
+      const newItems = deepClone(prevItems);
       const itemIndex = prevItems.findIndex((item) => item.id === itemId);
-      const newItems = prevItems.slice();
 
       newItems[itemIndex].coordinates = newCoordinates;
 
@@ -94,8 +33,8 @@ const App = () => {
     <StoreContext.Provider value={{ moveItem, allInventories, items }}>
       <div className="container">
         {
-          initialInventories.map((id) => (
-            <Inventory key={id} items={getInventoryItems(items, id)} {...getInventory(allInventories, id)} />
+          rootInventories.map((inventory) => (
+            <Inventory key={inventory.id} items={getInventoryItems(items, inventory.id)} {...inventory} />
           ))
         }
       </div>

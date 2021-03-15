@@ -16,12 +16,41 @@
 
 .modal-inventory {
   position: absolute;
+  border: 3px solid black;
 }
 
+.ReactModal__Overlay {
+  inset: unset !important;
+  top: 35% !important;
+  left: 50% !important;
+  z-index: 1 !important;
+}
+
+.modal-inventory-header {
+  color: white;
+  background: black;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-text {
+  pointer-events: none;
+}
+
+.close-button {
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: red;
+}
 
 .modal-inventory .inventory {
   margin-left: 0;
   background: gray;
+}
+
+.modal-inventory-container {
+  margin-top: -15px;
 }
 
 .container {
@@ -37,6 +66,8 @@
 }
 
 .item-child {
+  cursor: pointer;
+  user-select: none;
 	position: absolute;
   top: 0;
   left: 0;

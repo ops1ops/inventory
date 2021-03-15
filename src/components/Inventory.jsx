@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from 'react';
-import { CELL_SIZE, DATA_TRANSFER, ITEM_PARAMS } from '../constants';
-import { formatCoordinates, getItemByCoordinates, isPointInBounds, parseCoordinates } from '../utils';
+import { CELL_SIZE, DATA_TRANSFER } from '../constants';
+import { formatCoordinates, getItemByCoordinates, parseCoordinates } from '../utils';
 import Cell from './Cell';
 import Item from './Item';
 import { StoreContext } from '../store/context';
+import { ITEM_PARAMS } from '../mockData/itemParams';
 
 const DROP_CELL_CLASS = 'cell';
 const UNDRAGGABLE_CLASSES = [DROP_CELL_CLASS];
@@ -12,14 +13,12 @@ const Inventory = ({ height, width, items, id }) => {
   const { moveItem } = useContext(StoreContext);
 
 	useEffect(() => {
-	  const trackableZone = document.getElementById(id);
+	  const dragOver = (event) => {
+      event.preventDefault();
+    };
 
-    trackableZone.addEventListener("dragover", (event) => {
-			event.preventDefault();
-		}, false);
-
-    trackableZone.addEventListener("dragstart", (event) => {
-      if (UNDRAGGABLE_CLASSES.includes(event.target.className)) {
+	  const dragStart = (event) => {
+      if (UNDRAGGABLE_CLASSES.includes(event.target.className) || !event.target.dataset) {
         event.preventDefault();
 
         return;
@@ -35,10 +34,10 @@ const Inventory = ({ height, width, items, id }) => {
       event.dataTransfer.setData(DATA_TRANSFER.id, event.target.dataset.id);
       event.dataTransfer.setData(DATA_TRANSFER.typeId, event.target.dataset.type_id);
       event.dataTransfer.setData(DATA_TRANSFER.inventoryType, event.path[3].className.split(' ')[1]);
-		}, false);
+    };
 
-    trackableZone.addEventListener("drop", (event) => {
-			event.preventDefault();
+	  const drop = (event) => {
+      event.preventDefault();
 
       if (event.target.className !== DROP_CELL_CLASS) {
         return;
@@ -70,7 +69,19 @@ const Inventory = ({ height, width, items, id }) => {
       const inventoryId = itemInventoryId === id ? null : id;
 
       moveItem(itemId, dropCoordinates, inventoryId);
-		}, false);
+    };
+
+    const trackableZone = document.getElementById(id);
+
+    trackableZone.addEventListener("dragover", dragOver);
+    trackableZone.addEventListener("dragstart", dragStart);
+    trackableZone.addEventListener("drop", drop);
+
+    return () => {
+      trackableZone.removeEventListener("dragover", dragOver);
+      trackableZone.removeEventListener("dragstart", dragStart);
+      trackableZone.removeEventListener("drop", drop);
+    }
 	}, [height, id, moveItem, width]);
 
   const renderItem = (x, y) => {

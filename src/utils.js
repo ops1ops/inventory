@@ -26,19 +26,22 @@ export const getInventory = (inventories, inventoryId) =>
 
 export const getItemByCoordinates = (items, coordinates) => items.find((item) => item.coordinates === coordinates);
 
-const isPointInBounds = (x, y, boundsX, boundsY) => {
-  return x >= 0 && y >= 0 && x <= boundsX && y <= boundsY;
+export const isPointInBounds = (x, y, boundsX, boundsY) => {
+  return x >= 1 && y >= 1 && x <= boundsX && y <= boundsY;
 }
 
-export const validateCoordinates = (items, allInventories) => {
-  items.forEach(({ coordinates, inventoryId }) => {
-    const { width, height } = getInventory(allInventories, inventoryId);
-    const [x, y] = parseCoordinates(coordinates);
+export const deepClone = (object) => JSON.parse(JSON.stringify(object));
 
-    if (!isPointInBounds(x, y, width, height)) {
-      throw Error(`Item with coordinates "${coordinates}" is not in bounds of inventory (id: ${inventoryId}) size "${formatCoordinates(width, height)}"`);
+export const sortItemsByCoordinates = (items) =>
+  items
+  .slice()
+  .sort(({ coordinates: coordsA }, { coordinates: coordsB }) => {
+    const [aX, aY] = parseCoordinates(coordsA);
+    const [bX, bY] = parseCoordinates(coordsB);
+
+    if (aX === bX) {
+      return aY - bY;
     }
-  });
 
-  return items;
-}
+    return aX - bX;
+  });

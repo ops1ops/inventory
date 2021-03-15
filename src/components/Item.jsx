@@ -1,7 +1,7 @@
 import React from 'react';
-import { CELL_SIZE, ITEM_PARAMS } from '../constants';
-import { formatCoordinates } from '../utils';
+import { formatCoordinates, getStyleBySize } from '../utils';
 import ModalInventory from './ModalInventory';
+import { ITEM_PARAMS } from '../mockData/itemParams';
 
 const Item = ({ id, typeId, childInventoryId }) => {
   const { width, height, image } = ITEM_PARAMS[typeId];
@@ -9,16 +9,16 @@ const Item = ({ id, typeId, childInventoryId }) => {
 	return (
     <div
       draggable="true"
+      className="item-child"
       data-size={formatCoordinates(width, height)}
       data-id={id}
       data-type_id={typeId}
-      className="item-child"
-      style={{ width: `${width * CELL_SIZE}px`, height: `${height * CELL_SIZE}px`, backgroundImage: `url("${image}"` }}
+      style={{ ...getStyleBySize({ width, height }), backgroundImage: `url("${image}"` }}
     >
       <div className="item-content">
         <span>{typeId}</span>
       </div>
-      {childInventoryId && <ModalInventory id={childInventoryId} parentSize={{ width, height }} />}
+      {childInventoryId && <ModalInventory name={typeId} id={childInventoryId} parentSize={{ width, height }} />}
     </div>
 	);
 };
