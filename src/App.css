@@ -10,6 +10,9 @@
 }
 
 .inventory {
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: auto;
   position: relative;
 	margin-left: 100px;
 }
@@ -50,7 +53,11 @@
 }
 
 .modal-inventory-container {
-  margin-top: -15px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 1;
 }
 
 .container {
@@ -68,19 +75,34 @@
 .item-child {
   cursor: pointer;
   user-select: none;
-	position: absolute;
+	position: relative;
   top: 0;
   left: 0;
   z-index: 1;
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background: rgba(128, 0, 128, 0.3);
+}
+
+.item-child .item-child--dragging {
+  background: unset;
 }
 
 .item-content {
+  position: relative;
+  z-index: 1;
   color: white;
+  margin-right: 2px;
   font-size: 12px;
   text-align: right;
+}
+
+.background {
+  top: 0;
+  position: absolute;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
 }
 
 .dragging {

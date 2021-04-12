@@ -48,6 +48,12 @@ export const allItems = withIds([
     typeId: ITEM_TYPES.smallBag,
     coordinates: formatCoordinates(4, 4),
     inventoryId: '3',
+    childInventoryId: '7',
+  },
+  {
+    typeId: ITEM_TYPES.hexgrid,
+    coordinates: formatCoordinates(1, 1),
+    inventoryId: '2',
     childInventoryId: null,
   },
 ]);

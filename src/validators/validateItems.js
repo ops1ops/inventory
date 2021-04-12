@@ -1,14 +1,11 @@
-import {
-  deepClone,
-  formatCoordinates,
-  getInventory,
-  getInventoryItems,
-  isPointInBounds,
-  parseCoordinates,
-} from '../utils';
+import { deepClone, formatCoordinates, getInventory, isPointInBounds, parseCoordinates } from '../utils';
 import { ITEM_PARAMS } from '../mockData/itemParams';
 
-const fillMap = (map, { coordinates, typeId, inventoryId }) => {
+const throwOverlapError = (itemCoordinates, inventoryId, mapX, mapY) => {
+  throw Error(`Item (coordinates: ${itemCoordinates}) in inventory (id: ${inventoryId}) overlaps with another item at ${formatCoordinates(mapX + 1, mapY + 1)}`);
+}
+
+export const fillMap = (map, { coordinates, typeId }) => {
   const newMap = deepClone(map);
   const [x, y] = parseCoordinates(coordinates);
   const { width, height } = ITEM_PARAMS[typeId];
@@ -18,10 +15,6 @@ const fillMap = (map, { coordinates, typeId, inventoryId }) => {
       const mapY = y + i - 1;
       const mapX = x + j - 1;
 
-      if (newMap[mapY][mapX] === 1) {
-        throw Error(`Item (coordinates: ${coordinates}) in inventory (id: ${inventoryId}) overlaps with another item at ${formatCoordinates(mapX + 1, mapY + 1)}`);
-      }
-
       newMap[mapY][mapX] = 1;
     }
   }
@@ -29,10 +22,10 @@ const fillMap = (map, { coordinates, typeId, inventoryId }) => {
   return newMap;
 };
 
-const buildInventoryMap = (items, { width, height }) => {
-  const map = Array(height).fill(Array(width).fill(0));
+export const buildInventoryMap = (items, { width, height }) => {
+  const emptyMap = Array(height).fill(Array(width).fill(0));
 
-  return items.reduce(fillMap, map);
+  return items.reduce(fillMap, emptyMap);
 }
 
 const validateItems = (items, allInventories) => {
@@ -43,12 +36,6 @@ const validateItems = (items, allInventories) => {
     if (!isPointInBounds(x, y, width, height)) {
       throw Error(`Item with coordinates "${coordinates}" is not in bounds of inventory (id: ${inventoryId}) with size "${formatCoordinates(width, height)}"`);
     }
-  });
-
-  allInventories.forEach((inventory) => {
-    const inventoryItems = getInventoryItems(items, inventory.id);
-
-    buildInventoryMap(inventoryItems, inventory);
   });
 
   return items;

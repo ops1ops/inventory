@@ -45,3 +45,13 @@ export const sortItemsByCoordinates = (items) =>
 
     return aX - bX;
   });
+
+export const getDropCellCoordinates = (mouseOverCell, touchedItemCell) => {
+  const [touchedItemCellX, touchedItemCellY] = parseCoordinates(touchedItemCell);
+  const [mouseOverCellX, mouseOverCellY] = parseCoordinates(mouseOverCell);
+
+  const x = mouseOverCellX - touchedItemCellX;
+  const y = mouseOverCellY - touchedItemCellY;
+
+  return [x, y];
+}

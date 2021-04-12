@@ -13,12 +13,13 @@ const Item = ({ id, typeId, childInventoryId }) => {
       data-size={formatCoordinates(width, height)}
       data-id={id}
       data-type_id={typeId}
-      style={{ ...getStyleBySize({ width, height }), backgroundImage: `url("${image}"` }}
+      style={{ ...getStyleBySize({ width, height }) }}
     >
       <div className="item-content">
         <span>{typeId}</span>
       </div>
-      {childInventoryId && <ModalInventory name={typeId} id={childInventoryId} parentSize={{ width, height }} />}
+      {childInventoryId && <ModalInventory id={childInventoryId} typeId={typeId} />}
+      <div className="background" style={{ backgroundImage: `url("${image}"` }} />
     </div>
 	);
 };

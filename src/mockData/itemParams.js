@@ -2,22 +2,28 @@ export const ITEM_TYPES = {
   roubles: 'Roubles',
   smallBag: 'Sling bag',
   attack: 'Attack 2',
+  hexgrid: 'Hexgrid',
 }
 
 export const ITEM_PARAMS = {
   [ITEM_TYPES.roubles]: {
-    image: 'https://tarkov-market.com/img/roubles_lg.png',
+    image: 'https://github.com/RatScanner/EfTIcons/blob/master/name/item_money_ruble_small.png?raw=true',
     width: 1,
     height: 1,
   },
   [ITEM_TYPES.smallBag]: {
-    image: 'https://gamepedia.cursecdn.com/escapefromtarkov_gamepedia/thumb/7/72/Tactical_Sling_bag.png/320px-Tactical_Sling_bag.png?version=eb617d17d23014022a52ae9ff21a4a54',
+    image: 'https://github.com/RatScanner/EfTIcons/blob/master/name/item_equipment_backpack_molle.png?raw=true',
     width: 2,
     height: 2,
   },
   [ITEM_TYPES.attack]: {
-    image: 'https://gamepedia.cursecdn.com/escapefromtarkov_gamepedia/thumb/0/07/Attack.PNG/320px-Attack.PNG?version=93f1c964d7d1345fee71644aadc0d551',
+    image: 'https://cdn.discordapp.com/attachments/499325755721777161/821439225316638750/item_equipment_backpack_sso.png',
     width: 6,
     height: 7,
+  },
+  [ITEM_TYPES.hexgrid]: {
+    image: 'https://cdn.discordapp.com/attachments/499325755721777161/821435630487076924/371.png',
+    width: 3,
+    height: 3
   }
 };

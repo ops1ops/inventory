@@ -1,13 +1,43 @@
 import React from 'react';
-import { formatCoordinates } from '../utils';
-import { CELL_SIZE } from '../constants';
+import { formatCoordinates, getStyleBySize } from '../utils';
+import { isItemContainCell } from '../utils/cell';
 
-const Cell = ({ x, y, children }) => {
+const DEFAULT_COLOR = 'gray';
+
+/**
+ * map with all items -> if item in cell its filled with 1 -> we pass to function current state (0 or 1)
+ * function accepts current dragging item params (coordinates and typeId) and cell state (filler and coordinates)
+ * and returns our cell color
+ */
+const getCellColor = (cell, item) => {
+  const isContains = isItemContainCell(item, cell);
+
+  if (isContains) {
+    const isCellFilled = cell.filler === 1;
+
+    return isCellFilled ? 'indianred' : 'green';
+  }
+
+  return DEFAULT_COLOR;
+};
+
+const Cell = ({ x, y, children, style, filler, draggingItem, dropCoordinates, ...rest }) => {
+  const sizedX = x + 1;
+  const sizedY = y + 1;
+
+  const cellSize = { width: 1, height: 1 };
+  const cell = { x: sizedX, y: sizedY, filler };
+
+  const background = draggingItem.typeId && dropCoordinates
+    ? getCellColor(cell, { ...draggingItem, coordinates: dropCoordinates })
+    : DEFAULT_COLOR;
+
   return (
     <div
-      id={formatCoordinates(x + 1, y + 1)}
+      {...rest}
+      id={formatCoordinates(sizedX, sizedY)}
       className="cell"
-      style={{ width: `${CELL_SIZE}px`, height: `${CELL_SIZE}px` }}
+      style={{ ...style, ...getStyleBySize(cellSize), background }}
       draggable="false"
     >
       {children}

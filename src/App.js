@@ -13,6 +13,9 @@ const rootInventories = allInventories.slice(0, 2);
 
 const App = () => {
   const [items, setItems] = useState(validatedItems);
+  const [draggingItem, setDraggingItem] = useState({});
+  const dropCoordinatesState = useState();
+  const mouseOverCoordinatesState = useState();
 
   const moveItem = useCallback((itemId, newCoordinates, newInventoryId) => {
     setItems((prevItems) => {
@@ -29,8 +32,18 @@ const App = () => {
     });
   }, []);
 
+  const contextValue = {
+    moveItem,
+    allInventories,
+    items,
+    dropCoordinatesState,
+    mouseOverCoordinatesState,
+    draggingItem,
+    setDraggingItem
+  };
+
   return (
-    <StoreContext.Provider value={{ moveItem, allInventories, items }}>
+    <StoreContext.Provider value={contextValue}>
       <div className="container">
         {
           rootInventories.map((inventory) => (

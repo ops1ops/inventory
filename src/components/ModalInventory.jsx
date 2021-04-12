@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import Inventory from './Inventory';
-import { getInventory, getInventoryItems, getStyleBySize } from '../utils';
+import { getInventory, getInventoryItems } from '../utils';
 import { StoreContext } from '../store/context';
 
 Modal.setAppElement('#root');
 
-const ModalInventory = ({ parentSize, id, name }) => {
+const ModalInventory = ({ id, typeId }) => {
   const { items, allInventories } = useContext(StoreContext)
   const [isOpened, setOpened] = useState(false);
 
@@ -14,17 +14,18 @@ const ModalInventory = ({ parentSize, id, name }) => {
     event.stopPropagation();
 
     setOpened(false);
-  }
+  };
 
   const openModal = () => {
     setOpened(true);
-  }
+  };
 
+  // TODO: make modal draggable
   return (
-    <div onDoubleClick={openModal} className="modal-inventory-container" style={getStyleBySize(parentSize)}>
-      <Modal isOpen={isOpened} className="modal-inventory" style={{ zIndex: 1 }}>
+    <div onDoubleClick={openModal} className="modal-inventory-container">
+      <Modal isOpen={isOpened} className="modal-inventory" shouldCloseOnEsc>
         <div className="modal-inventory-header">
-          <span className="header-text">{name} ({id})</span>
+          <span className="header-text">{typeId} ({id})</span>
           <button onClick={closeModal} className="close-button">X</button>
         </div>
         <Inventory id={id} items={getInventoryItems(items, id)} {...getInventory(allInventories, id)} />

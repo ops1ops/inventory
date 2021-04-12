@@ -5,7 +5,11 @@ export const DATA_TRANSFER = {
   id: 'item id',
   typeId: 'type id',
   inventoryType: 'inventory type',
+  item: 'item',
 }
+
+export const DROP_CELL_CLASS = 'cell';
+export const UNDRAGGABLE_CLASSES = [DROP_CELL_CLASS];
 
 export const COORDINATES_SEPARATOR = '-';
 
