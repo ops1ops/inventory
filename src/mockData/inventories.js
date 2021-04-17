@@ -1,4 +1,4 @@
-import { getIdIncrement, withIds } from '../utils';
+import { getIdIncrement, withIds } from '../utils/utils';
 
 const incrementId = getIdIncrement();
 

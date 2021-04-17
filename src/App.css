@@ -98,6 +98,8 @@
 .background {
   top: 0;
   position: absolute;
+  user-select: none;
+  -webkit-user-drag: none;
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;

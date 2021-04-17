@@ -1,5 +1,5 @@
 import { CELL_SIZE } from './constants';
-import { formatCoordinates } from './utils';
+import { formatCoordinates } from './utils/utils';
 
 class DragService {
   getItemData = (event) => {

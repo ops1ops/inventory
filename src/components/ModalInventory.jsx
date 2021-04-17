@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import Inventory from './Inventory';
-import { getInventory, getInventoryItems } from '../utils';
+import { getInventory, getInventoryItems } from '../utils/utils';
 import { StoreContext } from '../store/context';
 
 Modal.setAppElement('#root');

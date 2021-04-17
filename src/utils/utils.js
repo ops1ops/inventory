@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { CELL_SIZE, COORDINATES_SEPARATOR } from './constants';
+import { CELL_SIZE, COORDINATES_SEPARATOR } from '../constants';
 
 export const parseCoordinates = (coordinates) => coordinates.split(COORDINATES_SEPARATOR).map(Number);
 

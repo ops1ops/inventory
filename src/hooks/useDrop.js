@@ -1,11 +1,11 @@
 import { useContext, useEffect } from 'react';
 import { DATA_TRANSFER, DROP_CELL_CLASS } from '../constants';
-import { formatCoordinates, getDropCellCoordinates } from '../utils';
+import { formatCoordinates, getDropCellCoordinates } from '../utils/utils';
 import { ITEM_PARAMS } from '../mockData/itemParams';
 import { StoreContext } from '../store/context';
 
 const useDrop = (inventoryRef, id, width, height) => {
-  const { moveItem, setDraggingItem } = useContext(StoreContext);
+  const { moveItem, setDraggingItem, setMouseOverCoordinates } = useContext(StoreContext);
 
   useEffect(() => {
     const inventory = inventoryRef.current;
@@ -43,7 +43,8 @@ const useDrop = (inventoryRef, id, width, height) => {
 
       moveItem(itemId, coordinatesToMove, inventoryId);
       setDraggingItem({});
-    }
+      setMouseOverCoordinates();
+    };
 
     inventory.addEventListener("drop", onDrop);
 

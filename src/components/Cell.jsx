@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatCoordinates, getStyleBySize } from '../utils';
+import { formatCoordinates, getStyleBySize } from '../utils/utils';
 import { isItemContainCell } from '../utils/cell';
 
 const DEFAULT_COLOR = 'gray';
@@ -21,14 +21,14 @@ const getCellColor = (cell, item) => {
   return DEFAULT_COLOR;
 };
 
-const Cell = ({ x, y, children, style, filler, draggingItem, dropCoordinates, ...rest }) => {
+const Cell = ({ x, y, children, style, filler, draggingItem, dropCoordinates, shouldBeColored, ...rest }) => {
   const sizedX = x + 1;
   const sizedY = y + 1;
 
   const cellSize = { width: 1, height: 1 };
   const cell = { x: sizedX, y: sizedY, filler };
 
-  const background = draggingItem.typeId && dropCoordinates
+  const background = shouldBeColored && draggingItem.typeId && dropCoordinates
     ? getCellColor(cell, { ...draggingItem, coordinates: dropCoordinates })
     : DEFAULT_COLOR;
 

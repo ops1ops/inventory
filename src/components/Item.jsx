@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatCoordinates, getStyleBySize } from '../utils';
+import { formatCoordinates, getStyleBySize } from '../utils/utils';
 import ModalInventory from './ModalInventory';
 import { ITEM_PARAMS } from '../mockData/itemParams';
 

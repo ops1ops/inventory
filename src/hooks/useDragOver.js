@@ -2,8 +2,8 @@ import throttle from 'lodash/throttle';
 import { useContext, useEffect } from 'react';
 import { StoreContext } from '../store/context';
 
-const useDragOver = (inventoryRef) => {
-  const { mouseOverCoordinatesState: [_, setMouseOverCoords] } = useContext(StoreContext);
+const useDragOver = (inventoryRef, inventoryId) => {
+  const { setMouseOverCoordinates } = useContext(StoreContext);
 
   useEffect(() => {
     let prevMouseOver;
@@ -15,7 +15,7 @@ const useDragOver = (inventoryRef) => {
       if (mouseOverCoordinates !== prevMouseOver) {
         prevMouseOver = mouseOverCoordinates;
 
-        setMouseOverCoords(mouseOverCoordinates);
+        setMouseOverCoordinates({ coords: mouseOverCoordinates, inventoryId });
       }
     }
 
@@ -32,7 +32,7 @@ const useDragOver = (inventoryRef) => {
     return () => {
       inventory.removeEventListener("dragover", onDragOver);
     };
-  }, [inventoryRef, setMouseOverCoords]);
+  }, [inventoryId, inventoryRef, setMouseOverCoordinates]);
 };
 
 export default useDragOver;

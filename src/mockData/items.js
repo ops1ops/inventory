@@ -1,4 +1,4 @@
-import { formatCoordinates, withIds } from '../utils';
+import { formatCoordinates, withIds } from '../utils/utils';
 import { ITEM_TYPES } from './itemParams';
 
 export const allItems = withIds([

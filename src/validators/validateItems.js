@@ -1,9 +1,5 @@
-import { deepClone, formatCoordinates, getInventory, isPointInBounds, parseCoordinates } from '../utils';
+import { deepClone, formatCoordinates, getInventory, isPointInBounds, parseCoordinates } from '../utils/utils';
 import { ITEM_PARAMS } from '../mockData/itemParams';
-
-const throwOverlapError = (itemCoordinates, inventoryId, mapX, mapY) => {
-  throw Error(`Item (coordinates: ${itemCoordinates}) in inventory (id: ${inventoryId}) overlaps with another item at ${formatCoordinates(mapX + 1, mapY + 1)}`);
-}
 
 export const fillMap = (map, { coordinates, typeId }) => {
   const newMap = deepClone(map);
@@ -26,7 +22,7 @@ export const buildInventoryMap = (items, { width, height }) => {
   const emptyMap = Array(height).fill(Array(width).fill(0));
 
   return items.reduce(fillMap, emptyMap);
-}
+};
 
 const validateItems = (items, allInventories) => {
   items.forEach(({ coordinates, inventoryId }) => {
